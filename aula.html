@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cotações de Moedas</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #4CAF50;
+    }
+    .container {
+        max-width: 600px;
+        margin: 20px auto;
+        background-color: #fff;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+        text-align: center;
+        color: #000; /* Título em preto */
+    }
+    ul {
+        list-style-type: none;
+        padding: 0;
+    }
+    li {
+        padding: 10px 0;
+        border-bottom: 1px solid #ccc;
+    }
+    li:last-child {
+        border-bottom: none;
+    }
+    /* Cores adicionais */
+    .container {
+        background-color: #f9f9f9;
+    }
+    li {
+        color: #555;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Cotações de Moedas</h1>
+    <div id="cotacoes"></div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // URL da API
+    var apiUrl = "https://economia.awesomeapi.com.br/last/USD-BRL,BTC-USD,BTC-BRL";
+    
+    // Requisição GET para a API
+    var request = new XMLHttpRequest();
+    request.open("GET", apiUrl, true);
+    
+    request.onload = function() {
+        if (request.status >= 200 && request.status < 400) {
+            // Sucesso na requisição
+            var data = JSON.parse(request.responseText);
+            exibirCotacoes(data);
+        } else {
+            // Erro na requisição
+            console.error("Erro ao obter as cotações");
+        }
+    };
+    
+    request.onerror = function() {
+        // Erro de conexão
+        console.error("Erro de conexão");
+    };
+    
+    request.send();
+});
+
+function exibirCotacoes(data) {
+    var cotacoesDiv = document.getElementById("cotacoes");
+    var cotacoesHTML = "<ul>";
+    
+    // USD
+    var usd = data["USDBRL"];
+    cotacoesHTML += "<li>USD: " + usd.bid + "</li>";
+    
+    // BTC-USD
+    var btcUsd = data["BTCUSD"];
+    cotacoesHTML += "<li>BTC (USD): " + btcUsd.bid + "</li>";
+    
+    // BTC-BRL
+    var btcBrl = data["BTCBRL"];
+    cotacoesHTML += "<li>BTC (BRL): " + btcBrl.bid + "</li>";
+    
+    cotacoesHTML += "</ul>";
+    
+    cotacoesDiv.innerHTML = cotacoesHTML;
+}
+</script>
+
+</body>
+</html>
